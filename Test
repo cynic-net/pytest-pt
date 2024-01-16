@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PROJDIR=$(cd "$(dirname "$0")" && pwd -P)
+cd "$PROJDIR"
+. ./pactivate -q
+tox
