@@ -14,7 +14,7 @@ die() {
 }
 
 tox_python_versions() {
-    echo "3.7 3.8 3.9 3.10"
+    tox -a | sed -n -e '/^py.*-pytest/{ s/^py//; s/-.*//; p }'
 }
 
 pythonz_versions() {
@@ -71,12 +71,14 @@ PROJDIR=$(cd "$(dirname "$0")" && pwd -P)
 cd "$PROJDIR"
 
 #   If first arg is -B we build pythonz interpreters.
-[[ ${#@} -gt 0 ]] && [[ $1 == -B ]] && { shift; build_pythons; }
+build_pythons_opt=false
+[[ ${#@} -gt 0 ]] && [[ $1 == -B ]] && { shift; build_pythons_opt=true; }
 #   Remaining args passed on to tox
 
 [[ -x "$pythonz" ]] \
     || die 3 "$pythonz not found; use ./Test -B to build Pythons"
 . ./pactivate -q
+$build_pythons_opt && build_pythons
 for v in $(pythonz_versions); do
     #   Horrible hack to get tox to be able to use our pythonz Pythons.
     PATH="$(dirname "$("$pythonz" locate $v)")":"$PATH"
