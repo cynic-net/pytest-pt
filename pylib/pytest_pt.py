@@ -30,14 +30,25 @@
 '''
 
 import  importlib, importlib.machinery
-
-from    _pytest.assertion.rewrite import assertstate_key
-from    py._path.local import LocalPath
 import  pytest
+from    _pytest.assertion.rewrite import assertstate_key
+
+#   We have to do some version-specific imports depending on which version
+#   of pytest we're running. We can't use `pytest.version_tuple` because
+#   that doesn't exist in pytest 5, so we just hack the version string.
+#   Note that we also do further version-specific assignments at the
+#   end of this file.
+ptver = int(pytest.__version__.split('.')[0])
+if ptver == 5:
+    from    py._path.local import LocalPath
+
+
+####################################################################
+#   Pytest 5.x
 
 PYTEST_CONFIG = None
 
-def pytest_configure(config):
+def pt5_pytest_configure(config):
     ''' Cache a copy of the pytest configuration.
 
         The configuration is needed by our collect_file hook to get a
@@ -84,7 +95,7 @@ def pt_pyimport(self, modname=None, ensuresyspath=True):
     spec.loader.exec_module(mod)
     return mod
 
-def pytest_collect_file(path, parent):
+def pt5_pytest_collect_file(path, parent):
     #   We handle only files with our custom extension, otherwise we
     #   return `None` to let something else handle it (or not).
     if path.ext != '.pt':
@@ -96,3 +107,13 @@ def pytest_collect_file(path, parent):
     #   Continue collection exactly as pytest normally does.
     ihook = parent.session.gethookproxy(path)
     return pytest.Module.from_parent(parent, fspath=path)
+
+####################################################################
+#   Select version
+
+if ptver == 5:
+    pytest_collect_file = pt5_pytest_collect_file
+    pytest_configure = pt5_pytest_configure
+else:
+    raise NotImplementedError(
+        'pytest_pt does not support pytest version {}'.format(ptver))
