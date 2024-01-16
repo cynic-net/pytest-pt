@@ -1,7 +1,78 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+pythonz=~/.pythonz/bin/pythonz
+pythonz_url='https://raw.github.com/saghul/pythonz/master/pythonz-install'
+#   This must match tox.env_list in tox.ini.
+pythonz_versions=(3.7 3.8 3.9)
+
+####################################################################
+#   Functions
+
+die() {
+    local exitcode="$1"; shift
+    echo 1>&2 "ERROR:" "$@"
+    exit $exitcode
+}
+
+pythonz_versions() {
+    for v in ${pythonz_versions[@]}; do
+        lastver=$(
+            pythonz list -t cpython -a \
+                | sed -n -e '/^  *[0-9]/s/^ *//p' \
+                | grep -F "$v." \
+                | sort -t . -k 3 -n \
+                | tail -1
+            ) || true
+        [[ -z $lastver ]] && die 4 "Can't find Python version matching $v"
+        echo -n "$lastver" ' '
+    done
+}
+
+build_pythons() {
+    if [[ -x "$pythonz" ]]; then
+        #   If pythonz is already installed, we assume that all the OS
+        #   dependencies necessary to build working Pythons are intalled.
+        echo "===== Updating pythonz"
+        "$pythonz" update
+    else
+        echo "===== Installing Python build dependencies"
+        #   Also apt-get build dependencies as per "From Source" below:
+        if type -p apt-get >/dev/null; then
+            sudo apt-get install build-essential dpkg-dev \
+                libffi-dev zlib1g-dev libbz2-dev liblzma-dev \
+                libssl-dev libgdbm-dev libncurses5-dev libreadline-dev
+        else
+            die 3 "Don't know how to install Python build dependencies"
+        fi
+        echo "===== Installing pythonz"
+        curl -sS -kL "$pythonz_url" | bash
+    fi
+
+    echo "===== Building Pythons"
+    for v in $(pythonz_versions); do
+        echo "----- Building Python $v"
+        "$pythonz" install -t cpython "$v"
+    done
+
+    echo "===== Python builds completed"
+}
+
+####################################################################
+#   Main
+
 PROJDIR=$(cd "$(dirname "$0")" && pwd -P)
 cd "$PROJDIR"
+
+#   If first arg is -B we build pythonz interpreters.
+[[ ${#@} -gt 0 ]] && [[ $1 == -B ]] && { shift; build_pythons; }
+#   Remaining args passed on to tox
+
+[[ -x "$pythonz" ]] \
+    || die 3 "$pythonz not found; use ./Test -B to build Pythons"
 . ./pactivate -q
-tox
+for v in $(pythonz_versions); do
+    #   Horrible hack to get tox to be able to use our pythonz Pythons.
+    PATH="$(dirname "$("$pythonz" locate $v)")":"$PATH"
+done
+tox "$@"
