@@ -3,8 +3,6 @@ set -euo pipefail
 
 pythonz=~/.pythonz/bin/pythonz
 pythonz_url='https://raw.github.com/saghul/pythonz/master/pythonz-install'
-#   This must match tox.env_list in tox.ini.
-pythonz_versions=(3.7 3.8 3.9 3.10)
 
 ####################################################################
 #   Functions
@@ -15,8 +13,12 @@ die() {
     exit $exitcode
 }
 
+tox_python_versions() {
+    echo "3.7 3.8 3.9 3.10"
+}
+
 pythonz_versions() {
-    for v in ${pythonz_versions[@]}; do
+    for v in $(tox_python_versions); do
         lastver=$(
             pythonz list -t cpython -a \
                 | sed -n -e '/^  *[0-9]/s/^ *//p' \
