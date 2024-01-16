@@ -27,6 +27,9 @@
     ask pytest to run both as tests, so don't do that.
 
     .. _configuration option: https://docs.pytest.org/en/latest/reference.html#hook-reference
+
+    This code is dedicated to the public domain under CC0.
+    http://creativecommons.org/publicdomain/zero/1.0/legalcode
 '''
 
 import  contextlib, sys
