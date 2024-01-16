@@ -14,7 +14,8 @@ die() {
 }
 
 tox_python_versions() {
-    tox -a | sed -n -e '/^py.*-pytest/{ s/^py//; s/-.*//; p }'
+    tox -a | sed -n -e '/^py.*-pytest/{ s/^py//; s/-.*//; p }' \
+        | sort -t . -k 2 -n | uniq
 }
 
 pythonz_versions() {
