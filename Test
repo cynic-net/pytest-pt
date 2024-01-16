@@ -33,8 +33,12 @@ build_pythons() {
     if [[ -x "$pythonz" ]]; then
         #   If pythonz is already installed, we assume that all the OS
         #   dependencies necessary to build working Pythons are intalled.
-        echo "===== Updating pythonz"
-        "$pythonz" update
+        tsfile="$PROJDIR/.build/pythonz-update-timestamp"
+        touch -d '24 hours ago' "$tsfile"
+        [[ $pythonz -ot $tsfile ]] && {     # pythonz more than a day old?
+            echo "===== Updating pythonz"
+            "$pythonz" update
+        }
     else
         echo "===== Installing Python build dependencies"
         #   Also apt-get build dependencies as per "From Source" below:
