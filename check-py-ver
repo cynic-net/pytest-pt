@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+#
+#   check-py-ver - confirm Python seems right for the tox environment
+#
+#   Bad/missing `base_python` settings can cause tox to quietly use tox's
+#   Python version rather than one matching the py* factor in the
+#   environment name. For example, if in `[testenv]` you specify
+#   `base_python = py3.8: ...`, that leaves `base_python` unset for a tox
+#   environment with factor `py3.9`. This will cause tox to create or even
+#   change the py3.9 environment to use e.g. Python 3.11 (if that's what
+#   tox itself is using) instead of 3.9 and carry on as if everything is ok.
+#
+#   Calling this script at the start of `commands = ...` allows us to
+#   ensure that, even with possibly subtle configuration errors, we really
+#   are using the Python version matching the py* factor in the environment
+#   name.
+#
+
+pyver=py$(python -c '
+import sys
+vi = sys.version_info
+print("{}.{}".format(vi.major, vi.minor))
+')
+
+[[ ${TOX_ENV_NAME%%-*} == $pyver ]] || {
+    echo 1>&2 "check-py-ver:" \
+        "Python version $pyver does not match environment ${TOX_ENV_NAME}"
+    exit 5
+}
