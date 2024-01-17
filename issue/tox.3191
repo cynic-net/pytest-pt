@@ -1,0 +1,61 @@
+`base_python` with full path fails with env name conflict
+
+### Issue
+
+I'm not sure if I'm doing this right; I [asked on StackOverflow][so] a couple of days ago and got no reply.
+
+This may be related to #2838, though that has been closed as fixed by #2840.
+
+I have a set of test environments that test my code with different versions of Python, using environment names with `py*` factors (e.g., `py3.8-pytest7`). When I run my tests without an explicit `base_python` setting, they work fine, finding the correct versions of Python only because I've explicitly added all of them to my `PATH` environment variable.
+
+I would prefer to explicitly specify paths to my various versions of Python, which are built with [pythonz], rather than adding all of them to my `PATH`. For example:
+
+    [tox]
+    skip_missing_interpreters = false
+
+    [testenv]
+    base_python =
+        py3.7: /home/cjs/.pythonz/pythons/CPython-3.7.17/bin/python3.7
+        py3.8: /home/cjs/.pythonz/pythons/CPython-3.8.18/bin/python3
+        py3.9: /home/cjs/.pythonz/pythons/CPython-3.9.18/bin/python
+
+I have confirmed that the versions of Python above are what they look like:
+
+    $ /home/cjs/.pythonz/pythons/CPython-3.7.17/bin/python3.7 --version
+    Python 3.7.17
+    $ /home/cjs/.pythonz/pythons/CPython-3.8.18/bin/python3 --version
+    Python 3.8.18
+    $ /home/cjs/.pythonz/pythons/CPython-3.9.18/bin/python --version
+    Python 3.9.18
+
+But when I try this, tox fails:
+
+    $ tox -vvv -r -e py3.7-pytest7,py3.8-pytest7,py3.9-pytest7
+    ROOT: 139 D setup logging to NOTSET on pid 606655 [tox/report.py:221]
+    py3.7-pytest7: 206 W remove tox env folder /home/cjs/co/public/gh/cynic-net/pytest_pt/.tox/py3.7-pytest7 [tox/tox_env/api.py:325]
+    py3.7-pytest7: 242 E failed with env name py3.7-pytest7 conflicting with base python /home/cjs/.pythonz/pythons/CPython-3.7.17/bin/python3.7 [tox/session/cmd/run/single.py:57]
+    py3.7-pytest7: FAIL ✖ in 0.04 seconds
+    py3.8-pytest7: 242 W remove tox env folder /home/cjs/co/public/gh/cynic-net/pytest_pt/.tox/py3.8-pytest7 [tox/tox_env/api.py:325]
+    py3.8-pytest7: 243 E failed with env name py3.8-pytest7 conflicting with base python /home/cjs/.pythonz/pythons/CPython-3.8.18/bin/python3 [tox/session/cmd/run/single.py:57]
+    py3.8-pytest7: FAIL ✖ in 0 seconds
+    py3.9-pytest7: 244 W remove tox env folder /home/cjs/co/public/gh/cynic-net/pytest_pt/.tox/py3.9-pytest7 [tox/tox_env/api.py:325]
+    py3.9-pytest7: 245 E failed with env name py3.9-pytest7 conflicting with base python /home/cjs/.pythonz/pythons/CPython-3.9.18/bin/python [tox/session/cmd/run/single.py:57]
+      py3.7-pytest7: FAIL code 1 (0.04 seconds)
+      py3.8-pytest7: FAIL code 1 (0.00 seconds)
+      py3.9-pytest7: FAIL code 1 (0.00 seconds)
+      evaluation failed :( (0.11 seconds)
+
+Am I somehow specifying these wrong, or is this a bug?
+
+### Environment
+
+- tox version 4.12.1
+- Python 3.11.2 (for tox)
+
+The test cases above were run from my [pytest_pt] project; that doesn't have any other configuration that could be triggering the problem, as far as I can tell. However, I can probably cons up a smaller test case if necessary.
+
+
+<!-------------------------------------------------------------------->
+[so]: https://stackoverflow.com/q/77823499/107294
+[pythonz]: https://github.com/saghul/pythonz
+[pytest_pt]: https://github.com/cynic-net/pytest_pt
