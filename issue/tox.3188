@@ -1,0 +1,33 @@
+Better warnings when configuration directives in wrong section
+
+### Issue
+
+As a new user to tox browsing through the rather long [Configuration documentation][config], it wasn't entirely clear to me when in the middle of the page which particular section a directive should go in. I set `ignore_base_python_conflict = false` in the `[testenv]` section, but this did not take effect because it should have gone in the `[tox]` section.
+
+I discovered this only because, for other reasons, I happened to be examining the output of `tox config` and noticed some `# !!! unused: ignore_base_python_conflict` lines in it.
+
+It would be nice if tox could emit a warning during test runs in situations like this.
+
+### Additional Documentation Suggestion
+
+Further, it might clarify the documentation somewhat if the ["Core"][core] and ["tox environment"][toxenv] sections made it a bit more clear that each is talking about a different section of the configuration file. For example, after these headings a note could be added along the lines of:
+
+>  __Core__
+>
+> The following options belong in the `[tox]` section of `tox.ini` or the `[tox:tox]` section of `setup.cfg`.
+>
+> ...
+>
+> __tox environment__
+>
+> The following options belong in the `[testenv]` section of `tox.ini` or `setup.cfg`.
+
+Alternatively, and perhaps better, would be to divide the ["Configuration"][config] page into three: a main page containing the first top-level section and two sub-pages containing the "Core" and "tox environment" sections, respectively.
+
+(I can probably figure out how to submit a patch for the former documentation change; I don't know how to do the latter.)
+
+
+<!-------------------------------------------------------------------->
+[config]: https://tox.wiki/en/latest/config.html
+[core]: https://tox.wiki/en/latest/config.html#core
+[toxenv]: https://tox.wiki/en/latest/config.html#tox-environment

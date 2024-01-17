@@ -1,0 +1,68 @@
+`base_python` settings may break `ignore_base_python_conflict = false` behaviour
+
+### Issue
+
+According to [the documentation][ibpc]:
+
+> Matching up the Python version with the environment name has became expected at this point, leading to surprises when some configs don’t do so. To help with sanity of users, an error will be raised whenever the environment name version does not match up with this expectation.
+
+This is unfortunately not always true.
+
+When `base_python` is unset for an environment, tox will set `base_python` to the `py*` factor from the environment name and the check described above works fine. For a configuration such as:
+
+    [tox]
+    skip_missing_interpreters = false
+    env_list = py{3.8,3.9}-pytest5
+
+    [testenv]
+    allowlist_externals = ./check-py-ver
+    commands = ./check-py-ver
+
+we can examine the `tox config` output and see that it includes the following:
+
+    [testenv:py3.8-pytest5]
+    base_python = py3.8
+
+    [testenv:py3.9-pytest5]
+    base_python = py3.9
+
+However, if we append the following to the above configuration (so it's in the `[testenv]` section:
+
+    base_python =
+        py3.8: python3.8
+
+examining the `tox config` output shows that tox has now left `base_python` unset (or perhaps set to an empty string?) for environments with any other `py*` factor, such as `py3.9`:
+
+    [testenv:py3.8-pytest5]
+    base_python = python3.8
+
+    [testenv:py3.9-pytest5]
+    base_python = 
+
+Running the tests confirms that tox is quietly changing the Python interpreter for `py3.9` to the version used by tox itself, Python 3.11, and carrying on with the testing as if nothing is wrong:
+
+    py3.8-pytest7: commands[0]> ./check-py-ver
+    py3.8-pytest7: OK ✔ in 0.7 seconds
+    py3.9-pytest7: recreate env because python changed version_info=[3, 9, 18, 'final', 0]->[3, 11, 2, 'final', 0] | executable='/home/cjs/.pythonz/pythons/CPython-3.9.18/bin/python3.9'->'/usr/bin/python3.11'
+    py3.9-pytest7: remove tox env folder /home/cjs/co/public/gh/cynic-net/pytest_pt/.tox/py3.9-pytest7
+    py3.9-pytest7: install_deps> python -I -m pip install 'pytest==7.*'
+    py3.9-pytest7: commands[0]> ./check-py-ver
+    check-py-ver: Python version py3.11 does not match environment py3.9-pytest7
+    py3.9-pytest7: exit 5 (0.02 seconds) /home/cjs/co/public/gh/cynic-net/pytest_pt> ./check-py-ver pid=538387
+      py3.8-pytest7: OK (0.70=setup[0.05]+cmd[0.03,0.31,0.31] seconds)
+      py3.9-pytest7: FAIL code 5 (2.23=setup[2.21]+cmd[0.02] seconds)
+      evaluation failed :( (3.00 seconds)
+
+Note that the test failure here is due to my test being `./check-py-ver`, which compares the Python version being used to the `py*` factor in `$TOX_ENV_NAME`; tests that don't explicitly make such a comparison run fine and pass.
+
+### Environment
+
+- tox version 4.12.1
+- Python 3.11.2 (for tox)
+
+The current test case I'm using is my [pytest_pt] project; the simplified cases above are derived from that and running just two test cases with `./Test -e py3.8-pytest7,py3.9-pytest7`. The first case is with the `tox.ini` file as is, and the second with the minor tweak described above. I think that the problem should be quite reproducible from the information above or pytest_pt, but I can probably cons up a smaller test case if necessary.
+
+
+<!-------------------------------------------------------------------->
+[ibpc]: https://tox.wiki/en/latest/config.html#ignore_base_python_conflict
+[pytest_pt]: https://github.com/cynic-net/pytest_pt
