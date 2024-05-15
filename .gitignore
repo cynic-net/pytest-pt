@@ -2,3 +2,7 @@ __pycache__/
 
 /.build/
 /.tox/
+
+#   These seem to be produced by tox running a build on this package.
+/build/
+/src/pytest_pt.egg-info/
