@@ -3,10 +3,24 @@ version = '0.0.1'
 name = 'pytest_pt'
 description = 'pytest plugin to use *.pt files as tests'
 readme = 'README.md'
+authors = [ { name = 'Curt J. Sampson', email = 'cjs@cynic.net' }, ]
+
+requires-python = '>=3.6'
 dependencies = ['pytest']
-authors = [
-    { name = 'Curt J. Sampson', email = 'cjs@cynic.net' },
+license = { file = 'LICENSE' }
+classifiers = [
+    'Development Status :: 4 - Beta',
+    'Intended Audience :: Developers',
+    'Framework :: Pytest',
+    'Topic :: Software Development :: Testing',
+    'Programming Language :: Python :: 3 :: Only',
+    'License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication',
 ]
+
+[project.urls]
+homepage = 'https://github.com/cynic-net/pytest_pt'
+source = 'https://github.com/cynic-net/pytest_pt'
+tracker = 'https://github.com/cynic-net/pytest_pt/issues'
 
 [build-system]
 requires = ['setuptools']
