@@ -23,6 +23,8 @@ will be tagged, but specific releases can also be fetched via the Git
 commit ID.
 
 #### dev
+
+#### 0.0.1 (2024-05-15)
 - Initial release as distribution package.
 
 
