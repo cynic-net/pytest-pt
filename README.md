@@ -13,6 +13,7 @@ which you want to collect `*.pt` files:
 
     from pytest_pt import *     # Plugin to find/execute .pt files as tests
 
+
 Versions Supported
 ------------------
 
@@ -26,7 +27,9 @@ supporting because we have no legacy users of it.
 - pytest 7 is tested on Pythons up to 3.12, and will probably work on newer
   versions of Python when they are released.
 
-### Testing
+
+Testing
+-------
 
 The top-level `./Test` script runs tests for all supported versions of
 Python and pytest. You do not need `tox` installed (or even `pip` or
