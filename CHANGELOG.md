@@ -24,6 +24,9 @@ commit ID.
 
 #### dev
 
+#### 0.0.2 (2024-05-15)
+- Changed: Package metadata now includes URLs, license, etc.
+
 #### 0.0.1 (2024-05-15)
 - Initial release as distribution package.
 
