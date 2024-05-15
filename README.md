@@ -66,6 +66,12 @@ pass through `./Test` to `tox` include: use include:
 - `config`: Print the tox configuration.
 
 
+Release Process
+---------------
+
+This is described in [`mc68-net/r8format:doc/release.md`][rel] on GitHub.
+
+
 Further Documentation
 ---------------------
 
@@ -82,3 +88,4 @@ author if you're needing further documentation or help: Curt J. Sampson
 [pytest]: https://pytest.org/
 [pytest_pt]: ./pylib/pytest_pt.py
 [pythonz]: https://github.com/saghul/pythonz
+[rel]: https://github.com/mc68-net/r8format/blob/main/doc/release.md
