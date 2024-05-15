@@ -33,14 +33,33 @@ Python and pytest. You do not need `tox` installed (or even `pip` or
 `virtualenv`); the script will take care of bootstrapping those into a
 local virtualenv using [pactivate].
 
-The script assumes you're using [pythonz] to supply the various versions of
-Python this is tested with; if it cannot find pythonz it will complain and
-stop. Giving `-B` as the first option to `./Test` will install or update
-pythonz if necessary, and build the latest patch version of Python for each
-of the minor releases that are tested.
+The script installs and uses [pythonz] to supply the various versions of
+Python this is tested with. You should run it the first time with `-B`
+as the first option to `./Test` to install/update pythonz and build
+the versions of Python that tox will need to run the tests. (The
+tests are for each minor release from 3.7 to 3.12; pythonz will be
+asked to build the latest patch release for each of those.)
 
-The test script can be updated to use Pythons from other sources, if
+The test script could be updated to use Pythons from other sources, if
 there is any call for it.
+
+#### Tox Arguments
+
+Any command line arguments given to `./Test` (with the exception of an
+initial `-B`—see above) will be passed on to `tox`. So, e.g., `./Test -h`
+will make tox print its help message. Typical arguments you might want to
+pass through `./Test` to `tox` include: use include:
+
+- `run -h`: Print help for the `tox run` command.
+
+- `-a`: Print a list of all environments in the default list to be tested.
+  This can be useful for finding an envirionment name for use in the `run`
+  command below.
+
+- `run -e py3.11-pytest8`: Run just a specific tox environment (or multiple
+  ones separated by commas) rather than all environment.
+
+- `config`: Print the tox configuration.
 
 
 Further Documentation

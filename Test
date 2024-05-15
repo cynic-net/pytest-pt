@@ -14,11 +14,19 @@ die() {
 }
 
 tox_python_versions() {
+    #   Extract a list of all Python versions (major.minor number only)
+    #   that tox.ini is testing. `tox -a` will return a list of all
+    #   combinations like `py3.11-pytest8`; for all lines starting
+    #   with `pyM.n` we extract just the `M.n` and print the unique
+    #   values in sorted order.
     tox -a | sed -n -e '/^py.*-pytest/{ s/^py//; s/-.*//; p }' \
         | sort -t . -k 2 -n | uniq
 }
 
 pythonz_versions() {
+    #   For each version number M.n in $(tox_python_versions), find
+    #   the latest version that pythonz knows about (whether installed
+    #   or not), which will be in M.n.p format. (This is somewhat slow.)
     for v in $(tox_python_versions); do
         lastver=$(
             pythonz list -t cpython -a \
@@ -33,6 +41,14 @@ pythonz_versions() {
 }
 
 build_pythons() {
+    #   Install pythonz and Python build dependencies, if necessary, or
+    #   update pythonz to the latest version if that's not been done within
+    #   the last 24 hours.
+    #
+    #   Then have pythonz download and build all Python versions in
+    #   $(pythonz_versions). Any already built will simply produce a
+    #   notice from pythonz that it's already there.
+    #
     if [[ -x "$pythonz" ]]; then
         #   If pythonz is already installed, we assume that all the OS
         #   dependencies necessary to build working Pythons are intalled.
