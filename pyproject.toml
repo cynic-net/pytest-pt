@@ -3,7 +3,7 @@ version = '0.0.0'
 name = 'pytest_pt'
 description = 'pytest plugin to use *.pt files as tests'
 readme = 'README.md'
-dependencies = []
+dependencies = ['pytest']
 authors = [
     { name = 'Curt J. Sampson', email = 'cjs@cynic.net' },
 ]
