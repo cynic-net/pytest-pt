@@ -17,15 +17,16 @@ which you want to collect `*.pt` files:
 Versions Supported
 ------------------
 
-This supports only pytest 5 and pytest 7; pytest 6 doesn't seem worth
-supporting because we have no legacy users of it.
+This supports only pytest 5, 7 and 8; pytest 6 doesn't seem worth
+supporting because we have no legacy users of it. (This could be added if
+there is any demand for it.)
 
-- Python 6 probably works, but is not tested due to tox being unhappy about
-  using it.
+- Python 3.6 probably works, but is not tested due to tox being unhappy
+  about using it.
 - pytest 5 is supported on versions of Python up to 3.9, but not on 3.10
   and above.
-- pytest 7 is tested on Pythons up to 3.12, and will probably work on newer
-  versions of Python when they are released.
+- pytest 7 and 8 are tested on Pythons up to 3.12, and will probably work
+  on newer versions of Python when they are released.
 
 
 Testing
