@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -Eeuo pipefail
 
 pythonz=~/.pythonz/bin/pythonz
 pythonz_url='https://raw.github.com/saghul/pythonz/master/pythonz-install'
@@ -97,11 +97,18 @@ cd "$PROJDIR"
 
 #   If first arg is -B we build pythonz interpreters.
 build_pythons_opt=false
-[[ ${#@} -gt 0 ]] && [[ $1 == -B ]] && { shift; build_pythons_opt=true; }
+skip_typecheck=false
+while [[ ${#@} -gt 0 ]]; do case "$1" in
+    -B)     shift; build_pythons_opt=true;;
+    -T)     shift; skip_typecheck=true;;
+     *)     break;;
+esac; done
 #   Remaining args passed on to tox
 
 [[ -x "$pythonz" ]] \
     || die 3 "$pythonz not found; use ./Test -B to build Pythons"
 . ./pactivate -q
+$skip_typecheck || { echo -n 'mypy: '; PYTHONPATH=src/ mypy; }
+exit 99 # XXX
 $build_pythons_opt && build_pythons
 test_tox "$@"

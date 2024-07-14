@@ -1,1 +1,4 @@
+mypy
+pytest<6  # Used for type-checking, not for (tox) testing
+
 tox>=4
