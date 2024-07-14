@@ -81,6 +81,14 @@ build_pythons() {
     echo "===== Python builds completed"
 }
 
+test_tox() {
+    for v in $(pythonz_versions); do
+        #   Horrible hack to get tox to be able to use our pythonz Pythons.
+        PATH="$(dirname "$("$pythonz" locate $v)")":"$PATH"
+    done
+    tox "$@"
+}
+
 ####################################################################
 #   Main
 
@@ -96,8 +104,4 @@ build_pythons_opt=false
     || die 3 "$pythonz not found; use ./Test -B to build Pythons"
 . ./pactivate -q
 $build_pythons_opt && build_pythons
-for v in $(pythonz_versions); do
-    #   Horrible hack to get tox to be able to use our pythonz Pythons.
-    PATH="$(dirname "$("$pythonz" locate $v)")":"$PATH"
-done
-tox "$@"
+test_tox "$@"
