@@ -23,6 +23,9 @@ will be tagged, but specific releases can also be fetched via the Git
 commit ID.
 
 #### dev
+
+#### 1.0.0 (2024-09-22)
+- Changed: Upgraded dev status to "Production/Stable"
 - Changed: Official package name, URLs, etc. is `pytest-pt` (`_`→`-`)
 - Docs: Update installation/activate instructions.
 

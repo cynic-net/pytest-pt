@@ -1,5 +1,5 @@
 [project]
-version = '0.0.3.dev0'
+version = '1.0.0'
 name = 'pytest-pt'
 description = 'pytest plugin to use *.pt files as tests'
 authors = [
@@ -11,7 +11,7 @@ urls.homepage = 'https://github.com/cynic-net/pytest-pt'
 urls.source = 'https://github.com/cynic-net/pytest-pt'
 urls.tracker = 'https://github.com/cynic-net/pytest-pt/issues'
 classifiers = [
-    'Development Status :: 4 - Beta',
+    'Development Status :: 5 - Production/Stable',
     'Intended Audience :: Developers',
     'Framework :: Pytest',
     'Topic :: Software Development :: Testing',
