@@ -2,7 +2,6 @@ __pycache__/
 
 /.build/
 /.tox/
-/dist/
 
 #   These seem to be produced by tox running a build on this package.
 /build/
