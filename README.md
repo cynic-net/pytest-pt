@@ -91,7 +91,7 @@ pass through `./Test` to `tox` include: use include:
 Release Process
 ---------------
 
-This is described in [`mc68-net/r8format:doc/release.md`][rel] on GitHub.
+See [cynic-net/pypi-release] on GitHub.
 
 
 Further Documentation
@@ -106,8 +106,8 @@ author if you're needing further documentation or help: Curt J. Sampson
 
 <!-------------------------------------------------------------------->
 [`src/pytest_pt.py`]: ./src/pytest_pt.py
+[cynic-net/pypi-release]: https://github.com/cynic-net/pypi-release
 [pactivate]: https://github.com/cynic-net/pactivate
 [pytest-conf]: https://docs.pytest.org/en/stable/reference/customize.html
 [pytest]: https://pytest.org/
 [pythonz]: https://github.com/saghul/pythonz
-[rel]: https://github.com/mc68-net/r8format/blob/main/doc/release.md
