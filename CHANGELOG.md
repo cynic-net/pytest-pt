@@ -24,6 +24,7 @@ commit ID.
 
 #### dev
 - Changed: Official package name, URLs, etc. is `pytest-pt` (`_`→`-`)
+- Docs: Update installation/activate instructions.
 
 #### 0.0.2 (2024-05-15)
 - Changed: Package metadata now includes URLs, license, etc.

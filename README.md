@@ -6,12 +6,34 @@ uses a custom module loader that always uses importlib (like specifying
 `importmode=importlib` to the standard pytest loader) and generates
 a module name ending in `~pt` to prevent namespace collisions.
 
-Use this by deposting the [`pylib/pytest_pt.py`][pytest_pt] in any
-directory where it will be found as the code for a (top-level) module, and
-import it in a [`conftest.py`][conftest] in one or more directories under
-which you want to collect `*.pt` files:
+### Installation and Activiation
 
-    from pytest_pt import *     # Plugin to find/execute .pt files as tests
+Normally just install this with Pip or similar: `pip install pytest-pt`.
+However, you may also simply deposit the single file [`src/pytest_pt.py`]
+in any directory where it will be found as the code for a (top-level)
+module.
+
+To activate it, you may simply add `-p pytest_pt` to your `pytest` command
+line, but normally you will want to activate it automatically via one of
+the following methods:
+
+1. In your `pyproject.toml`:
+
+        [tool.pytest.ini_options]
+        addopts   = ['-p pytest_pt']
+
+2. In your `pytest.ini` file:
+
+        [pytest]
+        addopts = -p pytest_pt
+
+3. Import it in a `conftest.py` in one or more directories under which you
+   want to collect `*.pt` files:
+
+        from pytest_pt import *     # Plugin to find/execute .pt files as tests
+
+For further information on pytest configuration, see the
+[Configuration][pytest-conf] section of the pytest documentation.
 
 
 Versions Supported
@@ -83,9 +105,9 @@ author if you're needing further documentation or help: Curt J. Sampson
 
 
 <!-------------------------------------------------------------------->
-[conftest]: ./pylib/conftest.py
+[`src/pytest_pt.py`]: ./src/pytest_pt.py
 [pactivate]: https://github.com/cynic-net/pactivate
+[pytest-conf]: https://docs.pytest.org/en/stable/reference/customize.html
 [pytest]: https://pytest.org/
-[pytest_pt]: ./pylib/pytest_pt.py
 [pythonz]: https://github.com/saghul/pythonz
 [rel]: https://github.com/mc68-net/r8format/blob/main/doc/release.md
