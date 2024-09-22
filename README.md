@@ -1,4 +1,4 @@
-pytest_pt: pytest plugin to use `*.pt` files as tests
+pytest-pt: pytest plugin to use `*.pt` files as tests
 =====================================================
 
 This [pytest] plugin will collect `*.pt` files as test modules. It

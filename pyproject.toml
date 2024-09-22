@@ -1,15 +1,15 @@
 [project]
-version = '0.0.2'
-name = 'pytest_pt'
+version = '0.0.3.dev0'
+name = 'pytest-pt'
 description = 'pytest plugin to use *.pt files as tests'
 authors = [
     { name = 'Curt J. Sampson', email = 'cjs@cynic.net' },
 ]
 license = { file = 'LICENSE' }
 readme = 'README.md'
-urls.homepage = 'https://github.com/cynic-net/pytest_pt'
-urls.source = 'https://github.com/cynic-net/pytest_pt'
-urls.tracker = 'https://github.com/cynic-net/pytest_pt/issues'
+urls.homepage = 'https://github.com/cynic-net/pytest-pt'
+urls.source = 'https://github.com/cynic-net/pytest-pt'
+urls.tracker = 'https://github.com/cynic-net/pytest-pt/issues'
 classifiers = [
     'Development Status :: 4 - Beta',
     'Intended Audience :: Developers',

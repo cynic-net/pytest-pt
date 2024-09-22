@@ -218,4 +218,4 @@ elif ptver in (7, 8):
     pytest_collect_file = pt7_pytest_collect_file
 else:
     raise NotImplementedError(
-        'pytest_pt does not support pytest version {}'.format(ptver))
+        'pytest-pt does not support pytest version {}'.format(ptver))

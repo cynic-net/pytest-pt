@@ -1,4 +1,4 @@
-' This test module should be discovered and run by the pytest_pt plugin. '
+' This test module should be discovered and run by the pytest-pt plugin. '
 
 def test_pt():
     assert 1
