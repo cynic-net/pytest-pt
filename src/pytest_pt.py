@@ -53,7 +53,7 @@ from    _pytest.nodes  import Collector
 ptver = int(pytest.__version__.split('.')[0])
 if ptver == 5:
     from    py._path.local import LocalPath
-elif ptver in (7, 8):
+elif ptver in (7, 8, 9):
     from    _pytest  import nodes
     from    _pytest.pathlib  import module_name_from_path, insert_missing_modules
 
@@ -214,7 +214,7 @@ def import_pt_module(file_path:Path, config:Config):
 if ptver == 5:
     pytest_collect_file = pt5_pytest_collect_file
     pytest_configure = pt5_pytest_configure
-elif ptver in (7, 8):
+elif ptver in (7, 8, 9):
     pytest_collect_file = pt7_pytest_collect_file
 else:
     raise NotImplementedError(

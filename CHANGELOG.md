@@ -24,6 +24,9 @@ commit ID.
 
 #### dev
 
+#### 1.0.1 (2025-11-21)
+- Fixed: Allow use of pytest 9. (The v8 code works fine under 9.)
+
 #### 1.0.0 (2024-09-22)
 - Changed: Upgraded dev status to "Production/Stable"
 - Changed: Official package name, URLs, etc. is `pytest-pt` (`_`→`-`)
