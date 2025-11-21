@@ -5,7 +5,8 @@ description = 'pytest plugin to use *.pt files as tests'
 authors = [
     { name = 'Curt J. Sampson', email = 'cjs@cynic.net' },
 ]
-license = { file = 'LICENSE' }
+license = 'CC-PDDC'
+license-files = [ 'LICENSE' ]
 readme = 'README.md'
 urls.homepage = 'https://github.com/cynic-net/pytest-pt'
 urls.source = 'https://github.com/cynic-net/pytest-pt'
@@ -16,7 +17,6 @@ classifiers = [
     'Framework :: Pytest',
     'Topic :: Software Development :: Testing',
     'Programming Language :: Python :: 3 :: Only',
-    'License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication',
 ]
 
 requires-python = '>=3.6'
