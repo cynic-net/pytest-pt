@@ -104,4 +104,4 @@ build_pythons_opt=false
     || die 3 "$pythonz not found; use ./Test -B to build Pythons"
 . ./pactivate -q
 $build_pythons_opt && build_pythons
-test_tox "$@"
+XXX test_tox "$@"
