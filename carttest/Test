@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+trap 'ec=$?; echo 1>&2 "INTERNAL ERROR: ec=$ec line=$LINENO cmd=$BASH_COMMAND";
+      exit $ec;' ERR
+
+export PROJDIR=$(cd "$(dirname "$0")" && pwd -P)
