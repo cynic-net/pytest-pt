@@ -10,6 +10,12 @@ die() {
     exit $exitcode
 }
 
+clean_big() {
+    local cleandirs=(.build/ .tox/)
+    echo "───── cleaning ${cleandirs[@]}"
+    rm -rf ${cleandirs[@]/#/$PROJDIR/}
+}
+
 tox_python_versions() {
     #   Extract a list of all Python versions (major.minor number only)
     #   that tox.ini is testing. `tox -a` will return a list of all
@@ -55,6 +61,7 @@ test_tox() {
 
 PROJDIR=$(cd "$(dirname "$0")" && pwd -P)
 cd "$PROJDIR"
+[[ ${#@} -gt 0 ]] && [[ $1 == -C ]] && { shift; clean_big; }
 . ./pactivate -q
 install_pythons
 test_tox "$@"
