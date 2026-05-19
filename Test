@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-pythonz=~/.pythonz/bin/pythonz
-pythonz_url='https://raw.github.com/saghul/pythonz/master/pythonz-install'
-
 ####################################################################
 #   Functions
 
@@ -23,69 +20,33 @@ tox_python_versions() {
         | sort -t . -k 2 -n | uniq
 }
 
-pythonz_versions() {
-    #   For each version number M.n in $(tox_python_versions), find
-    #   the latest version that pythonz knows about (whether installed
-    #   or not), which will be in M.n.p format. (This is somewhat slow.)
-    for v in $(tox_python_versions); do
-        lastver=$(
-            pythonz list -t cpython -a \
-                | sed -n -e '/^  *[0-9]/s/^ *//p' \
-                | grep -F "$v." \
-                | sort -t . -k 3 -n \
-                | tail -1
-            ) || true
-        [[ -z $lastver ]] && die 4 "Can't find Python version matching $v"
-        echo -n "$lastver" ' '
-    done
-}
+install_pythons() {
+    mise --version >/dev/null || die 9 \
+        'mise not found: try `curl https://mise.run | sh`'
 
-build_pythons() {
-    #   Install pythonz and Python build dependencies, if necessary, or
-    #   update pythonz to the latest version if that's not been done within
-    #   the last 24 hours.
-    #
-    #   Then have pythonz download and build all Python versions in
-    #   $(pythonz_versions). Any already built will simply produce a
-    #   notice from pythonz that it's already there.
-    #
-    if [[ -x "$pythonz" ]]; then
-        #   If pythonz is already installed, we assume that all the OS
-        #   dependencies necessary to build working Pythons are intalled.
-        tsfile="$PROJDIR/.build/pythonz-update-timestamp"
-        touch -d '24 hours ago' "$tsfile"
-        [[ $pythonz -ot $tsfile ]] && {     # pythonz more than a day old?
-            echo "===== Updating pythonz"
-            "$pythonz" update
-        }
-    else
-        echo "===== Installing Python build dependencies"
-        #   Also apt-get build dependencies as per "From Source" below:
-        if type -p apt-get >/dev/null; then
-            sudo apt-get install build-essential dpkg-dev \
-                libffi-dev zlib1g-dev libbz2-dev liblzma-dev \
-                libssl-dev libgdbm-dev libncurses5-dev libreadline-dev
-        else
-            die 3 "Don't know how to install Python build dependencies"
-        fi
-        echo "===== Installing pythonz"
-        curl -sS -kL "$pythonz_url" | bash
-    fi
-
-    echo "===== Building Pythons"
-    for v in $(pythonz_versions); do
-        echo "----- Building Python $v"
-        "$pythonz" install -t cpython "$v"
+    local v vers=( $(tox_python_versions) )
+    local v overs=() nvers=()
+    for v in ${vers[@]}; do
+        #   No Python 2 support, so we can compare just the minor ver.
+        #   Versions older than 3.9 need to be built because we have
+        #   no GitHub binaries and/or attestations for them.
+        [[ ${v/3./} -lt 9 ]] && overs+=("$v") || nvers+=("$v")
     done
 
-    echo "===== Python builds completed"
+    echo "───── Building/confirming older Pythons ${overs[@]}"
+    MISE_PYTHON_COMPILE=1 mise install -q ${overs[@]/#/python@}
+    echo "───── Installing/confirming newer Pythons ${nvers[@]}"
+    mise install -q ${nvers[@]/#/python@}
 }
 
 test_tox() {
-    for v in $(pythonz_versions); do
-        #   Horrible hack to get tox to be able to use our pythonz Pythons.
-        PATH="$(dirname "$("$pythonz" locate $v)")":"$PATH"
+    local v vers=( $(tox_python_versions) )
+    echo "───── tox path setup: ${vers[@]}"
+    for v in ${vers[@]}; do
+        #   Horrible hack to get tox to be able to use our mise Pythons.
+        PATH="$(mise where ${v/#/python@})/bin":"$PATH"
     done
+    echo "───── tox" "$@"
     tox "$@"
 }
 
@@ -94,14 +55,6 @@ test_tox() {
 
 PROJDIR=$(cd "$(dirname "$0")" && pwd -P)
 cd "$PROJDIR"
-
-#   If first arg is -B we build pythonz interpreters.
-build_pythons_opt=false
-[[ ${#@} -gt 0 ]] && [[ $1 == -B ]] && { shift; build_pythons_opt=true; }
-#   Remaining args passed on to tox
-
-[[ -x "$pythonz" ]] \
-    || die 3 "$pythonz not found; use ./Test -B to build Pythons"
 . ./pactivate -q
-$build_pythons_opt && build_pythons
+install_pythons
 test_tox "$@"
