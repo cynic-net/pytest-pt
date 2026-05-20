@@ -11,7 +11,14 @@ die() {
 }
 
 clean_big() {
-    local cleandirs=(.build/ .tox/)
+    clean_small     # make sure we don't miss anything
+    local cleandirs=(.build/)
+    echo "───── cleaning ${cleandirs[@]}"
+    rm -rf ${cleandirs[@]/#/$PROJDIR/}
+}
+
+clean_small() {
+    local cleandirs=(.tox/ ./src/pytest_pt.egg-info/)
     echo "───── cleaning ${cleandirs[@]}"
     rm -rf ${cleandirs[@]/#/$PROJDIR/}
 }
@@ -60,8 +67,15 @@ test_tox() {
 #   Main
 
 PROJDIR=$(cd "$(dirname "$0")" && pwd -P)
+
+#   -C or -c options to clean must be at start. Use -- -c to pass to tox.
+while [[ $# -gt 0 ]]; do case "$1" in
+    -C)             shift; clean_big;;
+    -c)             shift; clean_small;;
+    *)              break;;
+esac; done
+
 cd "$PROJDIR"
-[[ ${#@} -gt 0 ]] && [[ $1 == -C ]] && { shift; clean_big; }
 . ./pactivate -q
 install_pythons
 test_tox "$@"
