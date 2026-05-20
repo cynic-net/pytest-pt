@@ -1,5 +1,5 @@
 [project]
-version = '1.0.1'
+version = '1.2.0'
 name = 'pytest-pt'
 description = 'pytest plugin to use *.pt files as tests'
 authors = [
@@ -37,8 +37,17 @@ find = { where = ['src'] }
 #   to add additional modules to the list that `packages.find` comes up with.
 py-modules = ['pytest_pt']
 
+#   This builds a `pytet_pt-$VER.dist-info/entry_points.txt` file with a a
+#   `[pytest11]` section read by pytest to see what it should automatically
+#   import. (The auto-import can be suppressed with `-p no:pytest_pt`,
+#   PYTEST_DISABLE_PLUGIN_AUTOLOAD, etc.) For more, see:
+#   • https://packaging.python.org/en/latest/specifications/entry-points/
+#   • https://docs.pytest.org/en/stable/how-to/plugins.html#disabling-plugins-from-autoloading
+#   • https://docs.pytest.org/en/stable/how-to/writing_plugins.html#making-your-plugin-installable-by-others
+[project.entry-points.pytest11]
+pytest_pt = 'pytest_pt'
+
 #   This is used by pytest ≥6.0. Pytest 5.x does not read pyproject.toml
 #   files, and so is configured separately in tox.ini.
 [tool.pytest.ini_options]
-addopts   = ['-p pytest_pt']
 testpaths = ['tsrc']

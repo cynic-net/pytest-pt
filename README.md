@@ -13,24 +13,24 @@ However, you may also simply deposit the single file [`src/pytest_pt.py`]
 in any directory where it will be found as the code for a (top-level)
 module.
 
-To activate it, you may simply add `-p pytest_pt` to your `pytest` command
-line, but normally you will want to activate it automatically via one of
-the following methods:
+As long as the plugin package is installed in the current environment it's
+automatically enabled via the entry points system. The autoload can be
+disabled using the [standard methods][plugin-disable], typically the `-p
+no:pytest_pt` option on the command line or in a configuration file as
+shown below. Using `-p pytest_pt` in a similar way re-enable it if
+something earlier disabled it.
 
-1. In your `pyproject.toml`:
-
+        #   pyproject.toml
         [tool.pytest.ini_options]
         addopts   = ['-p pytest_pt']
 
-2. In your `pytest.ini` file:
-
+        #   pytest.ini
         [pytest]
         addopts = -p pytest_pt
 
-3. Import it in a `conftest.py` in one or more directories under which you
-   want to collect `*.pt` files:
-
-        from pytest_pt import *     # Plugin to find/execute .pt files as tests
+        #   In a conftest.py in one or more dirs under which you
+        #   want to collect *.pt files.
+        from pytest_pt import *
 
 For further information on pytest configuration, see the
 [Configuration][pytest-conf] section of the pytest documentation.
@@ -108,6 +108,7 @@ author if you're needing further documentation or help: Curt J. Sampson
 [`src/pytest_pt.py`]: ./src/pytest_pt.py
 [cynic-net/pypi-release]: https://github.com/cynic-net/pypi-release
 [pactivate]: https://github.com/cynic-net/pactivate
+[plugin-disable]: https://docs.pytest.org/en/stable/how-to/plugins.html#disabling-plugins-from-autoloading
 [pytest-conf]: https://docs.pytest.org/en/stable/reference/customize.html
 [pytest]: https://pytest.org/
 [pythonz]: https://github.com/saghul/pythonz

@@ -24,6 +24,12 @@ commit ID.
 
 #### dev
 
+#### 1.2.0
+- Changed: Plugin autoloads so you no longer need `-p pytest_pt`.
+
+#### 1.1.0
+- (Skipped to avoid confusion with 1.0.1.)
+
 #### 1.0.1 (2025-11-21)
 - Fixed: Allow use of pytest 9. (The v8 code works fine under 9.)
 
